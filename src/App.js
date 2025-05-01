@@ -1,25 +1,74 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from 'react';
+import { supabase } from './supabaseClient';
+import {
+  Container, Typography, Table, TableHead, TableRow, TableCell,
+  TableBody, Paper, IconButton
+} from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 
-function App() {
+export default function App() {
+  const [rezervace, setRezervace] = useState([]);
+
+  // Načtení rezervací
+  useEffect(() => {
+    fetchRezervace();
+  }, []);
+
+  const fetchRezervace = async () => {
+    const { data, error } = await supabase
+      .from('Rezervace')
+      .select('*')
+      .order('datum', { ascending: false });
+    if (!error) setRezervace(data || []);
+  };
+
+  // Mazání rezervace
+  const handleDelete = async (id) => {
+    if (!window.confirm('Opravdu smazat tuto rezervaci?')) return;
+    await supabase.from('Rezervace').delete().eq('id', id);
+    fetchRezervace(); // znovu načti data
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container maxWidth="md" sx={{ mt: 4 }}>
+      <Typography variant="h4" gutterBottom>Admin – Rezervace</Typography>
+      <Paper elevation={3}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Jméno</TableCell>
+              <TableCell>Telefon</TableCell>
+              <TableCell>Email</TableCell>
+              <TableCell>Služba</TableCell>
+              <TableCell>Datum</TableCell>
+              <TableCell>Čas</TableCell>
+              <TableCell>Smazat</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rezervace.map((r) => (
+              <TableRow key={r.id}>
+                <TableCell>{r.jmeno} {r.prijmeni}</TableCell>
+                <TableCell>{r.telefon}</TableCell>
+                <TableCell>{r.email}</TableCell>
+                <TableCell>{r.sluzba}</TableCell>
+                <TableCell>{r.datum}</TableCell>
+                <TableCell>{r.cas}</TableCell>
+                <TableCell>
+                  <IconButton color="error" onClick={() => handleDelete(r.id)}>
+                    <DeleteIcon />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
+            {rezervace.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={7} align="center">Žádné rezervace.</TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </Paper>
+    </Container>
   );
 }
-
-export default App;
