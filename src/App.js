@@ -56,7 +56,7 @@ export default function App() {
               sx={{
                 fontFamily: "'Montserrat', Arial, sans-serif",
                 fontWeight: 700,
-                fontSize: { xs: '1.2rem', sm: '1.5rem', md: '1.8rem' }, // menší velikosti
+                fontSize: { xs: '1.2rem', sm: '1.5rem', md: '1.8rem' },
                 textAlign: 'center',
                 letterSpacing: '0.5px',
                 mb: 2
