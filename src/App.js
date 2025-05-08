@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from './supabaseClient';
+import RespoTabulkaRezervaci from './RespoTabulkaRezervaci';
 import { Auth } from '@supabase/auth-ui-react';
 import { ThemeSupa } from '@supabase/auth-ui-shared';
-import { Box } from '@mui/material';
-import {
-  Container, Typography, Table, TableHead, TableRow, TableCell,
-  TableBody, Paper, IconButton, Button
-} from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
+import { Box, Container, Typography, Paper, Button } from '@mui/material';
 
 export default function App() {
   const [session, setSession] = useState(null);
@@ -26,8 +22,6 @@ export default function App() {
   useEffect(() => {
     if (session) fetchRezervace();
   }, [session]);
-
-  
 
   const fetchRezervace = async () => {
     const { data, error } = await supabase
@@ -57,15 +51,15 @@ export default function App() {
         <Container maxWidth="sm">
           <Paper elevation={3} sx={{ p: 4 }}>
             <Typography
-              variant="h4"
+              variant="h5"
               gutterBottom
               sx={{
-                fontFamily: '"Roboto", "Open Sans", Arial, sans-serif',
-                fontWeight: 600,
-                fontSize: { xs: '2rem', sm: '1.5rem', md: '2rem' },
+                fontFamily: "'Montserrat', Arial, sans-serif",
+                fontWeight: 700,
+                fontSize: { xs: '1.2rem', sm: '1.5rem', md: '1.8rem' }, // menší velikosti
                 textAlign: 'center',
-                letterSpacing: '0.3px',
-                mb: 3
+                letterSpacing: '0.5px',
+                mb: 2
               }}
             >
               Přihlášení do administrace
@@ -93,52 +87,33 @@ export default function App() {
 
   return (
     <Container maxWidth="md" sx={{ mt: 4 }}>
-      <Typography variant="h4" gutterBottom>Admin – Rezervace</Typography>
+      <Typography
+        variant="h4"
+        gutterBottom
+        sx={{
+          fontFamily: "'Montserrat', Arial, sans-serif",
+          fontWeight: 700,
+          fontSize: { xs: '1.6rem', sm: '1.8rem', md: '2rem' },
+          textAlign: 'center',
+          letterSpacing: '0.5px',
+          mb: 3
+        }}
+      >
+        Admin – Rezervace
+      </Typography>
+
+      <RespoTabulkaRezervaci rezervace={rezervace} handleDelete={handleDelete} />
+
       <Button
         variant="outlined"
         color="secondary"
-        sx={{ mb: 2 }}
+        sx={{ mt: 5, fontWeight: 600, display: 'block', mx: 'auto' }}
         onClick={() => supabase.auth.signOut()}
       >
         Odhlásit se
       </Button>
-      <Paper elevation={3}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Jméno</TableCell>
-              <TableCell>Telefon</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Služba</TableCell>
-              <TableCell>Datum</TableCell>
-              <TableCell>Čas</TableCell>
-              <TableCell>Smazat</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rezervace.map((r) => (
-              <TableRow key={r.id}>
-                <TableCell>{r.jmeno} {r.prijmeni}</TableCell>
-                <TableCell>{r.telefon}</TableCell>
-                <TableCell>{r.email}</TableCell>
-                <TableCell>{r.sluzba}</TableCell>
-                <TableCell>{r.datum}</TableCell>
-                <TableCell>{r.cas}</TableCell>
-                <TableCell>
-                  <IconButton color="error" onClick={() => handleDelete(r.id)}>
-                    <DeleteIcon />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
-            {rezervace.length === 0 && (
-              <TableRow>
-                <TableCell colSpan={7} align="center">Žádné rezervace.</TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </Paper>
+      {/*RespoTabulka*/}
+      
     </Container>
   );
 }
