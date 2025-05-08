@@ -1,18 +1,22 @@
 body {
   background: #f7f7fa;
 }
+
 h1 {
   text-align: center;
   margin-bottom: 32px;
 }
+
 table {
   border-radius: 8px;
   overflow: hidden;
 }
+
 th {
   background: #e0e7ff;
   font-weight: bold;
 }
+
 tr:nth-child(even) {
   background: #f9f9f9;
 }
