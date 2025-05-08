@@ -74,7 +74,9 @@ export default function App() {
                   sign_in: {
                     email_label: 'E-mail',
                     password_label: 'Heslo',
-                    button_label: 'Přihlásit se'
+                    button_label: 'Přihlásit se',
+                    email_input_placeholder: 'Zadejte e-mail',
+                    password_input_placeholder: 'Zadejte heslo'
                   }
                 }
               }}
