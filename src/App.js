@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from './supabaseClient';
+import { Auth } from '@supabase/auth-ui-react';
+import { ThemeSupa } from '@supabase/auth-ui-shared';
 import {
   Container, Typography, Table, TableHead, TableRow, TableCell,
   TableBody, Paper, IconButton
