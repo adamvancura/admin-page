@@ -34,7 +34,7 @@ export default function RespoTabulka({ rezervace, handleDelete }) {
     );
   }
 
-  // Desktop – tabulka
+  // Na Desktopu – tabulka
   return (
     <Paper elevation={3} sx={{ overflowX: 'auto' }}>
       <Table>
