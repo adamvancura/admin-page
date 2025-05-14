@@ -3,11 +3,12 @@ import { supabase } from './supabaseClient';
 import RespoTabulkaRezervaci from './RespoTabulkaRezervaci';
 import { Auth } from '@supabase/auth-ui-react';
 import { ThemeSupa } from '@supabase/auth-ui-shared';
-import { Box, Container, Typography, Paper, Button } from '@mui/material';
+import { Box, Container, Typography, Paper, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField  } from '@mui/material';
 
 export default function App() {
   const [session, setSession] = useState(null);
   const [rezervace, setRezervace] = useState([]);
+  const [editRezervace, setEditRezervace] = useState(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -35,6 +36,22 @@ export default function App() {
     if (!window.confirm('Opravdu smazat tuto rezervaci?')) return;
     await supabase.from('Rezervace').delete().eq('id', id);
     fetchRezervace();
+  };
+
+  const handleEdit = async () => {
+    try {
+      const { error } = await supabase
+        .from('Rezervace')
+        .update(editRezervace)
+        .eq('id', editRezervace.id);
+
+      if (error) throw error;
+      
+      fetchRezervace();
+      setEditRezervace(null);
+    } catch (error) {
+      alert('Chyba při úpravě: ' + error.message);
+    }
   };
 
   if (!session) {
@@ -104,7 +121,89 @@ export default function App() {
         Admin – Rezervace
       </Typography>
 
-      <RespoTabulkaRezervaci rezervace={rezervace} handleDelete={handleDelete} />
+      
+      <RespoTabulkaRezervaci 
+        rezervace={rezervace} 
+        handleDelete={handleDelete}
+        onEdit={setEditRezervace}
+      />
+
+      
+      <Dialog open={!!editRezervace} onClose={() => setEditRezervace(null)}>
+        <DialogTitle>Upravit rezervaci</DialogTitle>
+        <DialogContent>
+          <TextField
+            label="Jméno"
+            value={editRezervace?.jmeno || ''}
+            onChange={(e) => setEditRezervace({ ...editRezervace, jmeno: e.target.value })}
+            fullWidth
+            margin="normal"
+          />
+
+          <TextField
+            label="Příjmení"
+            value={editRezervace?.prijmeni || ''}
+            onChange={(e) => setEditRezervace({ ...editRezervace, prijmeni: e.target.value })}
+            fullWidth
+            margin="normal"
+          />
+
+          <TextField
+            label="E-mail"
+            value={editRezervace?.email || ''}
+            onChange={(e) => setEditRezervace({ ...editRezervace, email: e.target.value })}
+            fullWidth
+            margin="normal"
+          />
+
+          <TextField
+            label="Telefon"
+            value={editRezervace?.telefon || ''}
+            onChange={(e) => setEditRezervace({ ...editRezervace, telefon: e.target.value })}
+            fullWidth
+            margin="normal"
+          />
+
+          <TextField
+            label="Služba"
+            value={editRezervace?.sluzba || ''}
+            onChange={(e) => setEditRezervace({ ...editRezervace, sluzba: e.target.value })}
+            fullWidth
+            margin="normal"
+          />
+
+          <TextField
+            label="Datum"
+            type="date"
+            value={editRezervace?.datum || ''}
+            onChange={(e) => setEditRezervace({ ...editRezervace, datum: e.target.value })}
+            fullWidth
+            margin="normal"
+            InputLabelProps={{ shrink: true }}
+          />
+
+          <TextField
+            label="Čas"
+            type="time"
+            value={editRezervace?.cas || ''}
+            onChange={(e) => setEditRezervace({ ...editRezervace, cas: e.target.value })}
+            fullWidth
+            margin="normal"
+            InputLabelProps={{ shrink: true }}
+          />
+
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setEditRezervace(null)}>Zrušit</Button>
+          <Button 
+            onClick={handleEdit}
+            color="primary" 
+            variant="contained"
+          >
+            Uložit
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       <Button
         variant="outlined"
@@ -114,8 +213,6 @@ export default function App() {
       >
         Odhlásit se
       </Button>
-      {/*RespoTabulka*/}
-      
     </Container>
   );
 }

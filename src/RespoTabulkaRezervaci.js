@@ -1,9 +1,9 @@
 import React from 'react';
-import { Table, TableHead, TableRow, TableCell, TableBody, Paper, Stack, Typography, Button, IconButton } from '@mui/material';
+import { Table, TableHead, TableRow, TableCell, TableBody, Paper, Stack, Typography, Button, IconButton, Box } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 
-export default function RespoTabulka({ rezervace, handleDelete }) {
-  
+export default function RespoTabulkaRezervaci({ rezervace, handleDelete, onEdit }) { 
   const isMobile = window.innerWidth < 600;
 
   if (isMobile) {
@@ -14,17 +14,18 @@ export default function RespoTabulka({ rezervace, handleDelete }) {
             <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
               {r.jmeno} {r.prijmeni}
             </Typography>
-            <Typography variant="body2">{r.email}</Typography>
-            <Typography variant="body2">{r.sluzba} – {r.datum}, {r.cas}</Typography>
-            <Button
-              size="small"
-              color="error"
-              startIcon={<DeleteIcon />}
-              onClick={() => handleDelete(r.id)}
-              sx={{ mt: 1 }}
-            >
-              Smazat
-            </Button>
+            <Typography variant="body2">Tel: {r.telefon}</Typography>
+            <Typography variant="body2">Email: {r.email}</Typography>
+            <Typography variant="body2">Služba: {r.sluzba}</Typography>
+            <Typography variant="body2">Datum: {r.datum}, {r.cas}</Typography>
+            <Box sx={{ mt: 1, display: 'flex', gap: 1 }}>
+              <IconButton color="primary" onClick={() => onEdit(r)}>
+                <EditIcon />
+              </IconButton>
+              <IconButton color="error" onClick={() => handleDelete(r.id)}>
+                <DeleteIcon />
+              </IconButton>
+            </Box>
           </Paper>
         ))}
         {rezervace.length === 0 && (
@@ -34,7 +35,6 @@ export default function RespoTabulka({ rezervace, handleDelete }) {
     );
   }
 
-  // Na Desktopu – tabulka
   return (
     <Paper elevation={3} sx={{ overflowX: 'auto' }}>
       <Table>
@@ -46,7 +46,7 @@ export default function RespoTabulka({ rezervace, handleDelete }) {
             <TableCell>Služba</TableCell>
             <TableCell>Datum</TableCell>
             <TableCell>Čas</TableCell>
-            <TableCell>Smazat</TableCell>
+            <TableCell>Akce</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -59,6 +59,9 @@ export default function RespoTabulka({ rezervace, handleDelete }) {
               <TableCell>{r.datum}</TableCell>
               <TableCell>{r.cas}</TableCell>
               <TableCell>
+                <IconButton color="primary" onClick={() => onEdit(r)}>
+                  <EditIcon />
+                </IconButton>
                 <IconButton color="error" onClick={() => handleDelete(r.id)}>
                   <DeleteIcon />
                 </IconButton>
