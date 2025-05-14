@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, TableHead, TableRow, TableCell, TableBody, Paper, Stack, Typography, Button, IconButton, Box } from '@mui/material';
+import { Table, TableHead, TableRow, TableCell, TableBody, Paper, Stack, Typography, IconButton, Box } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
@@ -46,10 +46,12 @@ export default function RespoTabulkaRezervaci({ rezervace, handleDelete, onEdit 
             <TableCell>Služba</TableCell>
             <TableCell>Datum</TableCell>
             <TableCell>Čas</TableCell>
-            <TableCell>Akce</TableCell>
+            <TableCell align="center">Upravit</TableCell>
+            <TableCell align="center">Smazat</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
+          
           {rezervace.map(r => (
             <TableRow key={r.id}>
               <TableCell>{r.jmeno} {r.prijmeni}</TableCell>
@@ -58,19 +60,22 @@ export default function RespoTabulkaRezervaci({ rezervace, handleDelete, onEdit 
               <TableCell>{r.sluzba}</TableCell>
               <TableCell>{r.datum}</TableCell>
               <TableCell>{r.cas}</TableCell>
-              <TableCell>
+              <TableCell align="center">
                 <IconButton color="primary" onClick={() => onEdit(r)}>
                   <EditIcon />
                 </IconButton>
+              </TableCell>
+              <TableCell align="center">
                 <IconButton color="error" onClick={() => handleDelete(r.id)}>
                   <DeleteIcon />
                 </IconButton>
               </TableCell>
             </TableRow>
           ))}
+
           {rezervace.length === 0 && (
             <TableRow>
-              <TableCell colSpan={7} align="center">Žádné rezervace.</TableCell>
+              <TableCell colSpan={8} align="center">Žádné rezervace.</TableCell>
             </TableRow>
           )}
         </TableBody>
